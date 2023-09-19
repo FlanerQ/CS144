@@ -1,2 +1,5 @@
 /build
 /.ccls-cache
+.cache
+fq
+**/.claude/settings.local.json
