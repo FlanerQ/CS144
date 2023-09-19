@@ -1,5 +1,13 @@
+*.a
+*.o
 /build
 /.ccls-cache
-.cache
+/.cache
+/.vscode
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+CTestTestfile.cmake
+compile_commands.json
 fq
-**/.claude/settings.local.json
