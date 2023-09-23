@@ -2,13 +2,15 @@
 #define SPONGE_LIBSPONGE_TCP_SENDER_HH
 
 #include "byte_stream.hh"
+#include "retrans_timer.hh"
 #include "tcp_config.hh"
 #include "tcp_segment.hh"
 #include "wrapping_integers.hh"
 
+#include <cstdint>
 #include <functional>
+#include <list>
 #include <queue>
-
 //! \brief The "sender" part of a TCP implementation.
 
 //! Accepts a ByteStream, divides it up into segments and sends the
@@ -31,6 +33,27 @@ class TCPSender {
 
     //! the (absolute) sequence number for the next byte to be sent
     uint64_t _next_seqno{0};
+
+    //! whether the fin is sent
+    bool _end{};
+
+    //! the retransmission timer
+    Timer _timer;
+
+    //! the (absolute) receiver ack.
+    uint64_t _receiver_ack{0};
+
+    //! the initial window size should be 1
+    uint64_t _receiver_window_size{1};
+
+    //! the outstanding segments
+    std::list<TCPSegment> _outstanding_segments{};
+
+    // ！the consecutive retransmissions
+    unsigned int _consecutive_retransmissions{0};
+
+    //! whether the window is full or not
+    bool window_not_full(uint64_t window_size) const { return window_size > bytes_in_flight(); }
 
   public:
     //! Initialize a TCPSender
