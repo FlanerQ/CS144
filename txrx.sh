@@ -169,6 +169,7 @@ trap exit_cleanup EXIT
 get_cmdline_options "$@"
 
 . "$(dirname "$0")"/etc/tunconfig
+TUN_IP_PREFIX=169.254
 REF_HOST=${TUN_IP_PREFIX}.144.1
 TEST_HOST=${TUN_IP_PREFIX}.144.1
 SERVER_PORT=$(($((RANDOM % 50000)) + 1025))

@@ -3,8 +3,11 @@
 
 #include "tcp_config.hh"
 #include "tcp_receiver.hh"
+#include "tcp_segment.hh"
 #include "tcp_sender.hh"
 #include "tcp_state.hh"
+
+#include <cstddef>
 
 //! \brief A complete endpoint of a TCP connection
 class TCPConnection {
@@ -16,10 +19,41 @@ class TCPConnection {
     //! outbound queue of segments that the TCPConnection wants sent
     std::queue<TCPSegment> _segments_out{};
 
+    //! time interval since last segment received.
+    size_t _time_since_last_segment_received{};
+
+    //! Whether connection is active
+    bool _active{true};
+
     //! Should the TCPConnection stay active (and keep ACKing)
     //! for 10 * _cfg.rt_timeout milliseconds after both streams have ended,
     //! in case the remote TCPConnection doesn't know we've received its whole stream?
     bool _linger_after_streams_finish{true};
+
+    //! \brief the helper function for setting the sending segments'
+    //! ack and window size
+    void set_ack_and_window(TCPSegment &seg);
+
+    //! \brief Pops the segment from the outbound stream and wrap it
+    //! then pushs it into the `_segments_out`
+    bool send_new_segments();
+
+    //! \brief check whether the inbound stream has been fully assembled
+    //! and ended (for Prereq #1)
+    bool check_inbound_stream_assembled_and_ended();
+
+    //! \brief check whether the outbound stream has been ended by the loacl
+    //! application and fully sent that fact it ended to the remote peer
+    bool check_outbound_stream_ended_and_send_fin();
+
+    //! \brief check whether the outbound stream has been fully acknowledged by the remote peer
+    bool check_outbound_fully_acknowledged();
+
+    //! \brief sen segment with rst flag
+    void send_rst_flag_segment();
+
+    //! \brief set error and change `_active` to false
+    void set_error();
 
   public:
     //! \name "Input" interface for the writer

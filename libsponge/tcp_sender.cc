@@ -118,17 +118,17 @@ void TCPSender::ack_received(const WrappingInt32 ackno, const uint16_t window_si
 }
 
 /*
-Use of Timer:
+    Use of Timer:
 
-当发送一个新的segment的时候，如果timer没有开启，那么需要开启timer。
+    当发送一个新的segment的时候，如果timer没有开启，那么需要开启timer。
 
-当在RTO内收到一个合法的ACK,有两种情况:
-如果sender没发完segments那么需要重启timer,重启的意思是timer从0开始计时。
-如果sender已经发完所有的segments了那么需要关闭timer
+    当在RTO内收到一个合法的ACK,有两种情况:
+    如果sender没发完segments那么需要重启timer,重启的意思是timer从0开始计时。
+    如果sender已经发完所有的segments了那么需要关闭timer
 
-当超时的情况发生,也是两种情况:
-window_size = 0 : 重启timer,重传segments。
-window_size != 0 : double RTO, 重启timer,重传segments。
+    当超时的情况发生,也是两种情况:
+    window_size = 0 : 重启timer,重传segments。
+    window_size != 0 : double RTO, 重启timer,重传segments。
 */
 
 //! \param[in] ms_since_last_tick the number of milliseconds since the last call to this method
