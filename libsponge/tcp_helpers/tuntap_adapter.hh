@@ -3,6 +3,7 @@
 
 #include "ethernet_header.hh"
 #include "network_interface.hh"
+#include "tcp_over_ip.hh"
 #include "tun.hh"
 
 #include <optional>
