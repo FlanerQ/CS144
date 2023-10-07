@@ -3,8 +3,11 @@
 
 #include "network_interface.hh"
 
+#include <cstddef>
+#include <cstdint>
 #include <optional>
 #include <queue>
+#include <vector>
 
 //! \brief A wrapper for NetworkInterface that makes the host-side
 //! interface asynchronous: instead of returning received datagrams
@@ -48,6 +51,27 @@ class Router {
     //! as specified by the route with the longest prefix_length that matches the
     //! datagram's destination address.
     void route_one_datagram(InternetDatagram &dgram);
+
+    //! Router Entry
+    struct ForwardEntry {
+        uint32_t route_prefix;
+        uint8_t prefix_length;
+        std::optional<Address> next_hop;
+        size_t interface_num;
+
+        ForwardEntry() = default;
+        ForwardEntry(const uint32_t _route_prefix,
+                     const uint8_t _prefix_length,
+                     const std::optional<Address> &_next_hop,
+                     const size_t _interface_num)
+            : route_prefix(_route_prefix)
+            , prefix_length(_prefix_length)
+            , next_hop(_next_hop)
+            , interface_num(_interface_num) {}
+    };
+
+    //! Router Table
+    std::vector<ForwardEntry> _forward_table{};
 
   public:
     //! Add an interface to the router
