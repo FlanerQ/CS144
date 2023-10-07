@@ -11,4 +11,3 @@ cmake_install.cmake
 CTestTestfile.cmake
 compile_commands.json
 fq
-labs_pdf_21
